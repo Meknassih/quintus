@@ -1,8 +1,9 @@
 import { Box } from '@mui/material';
 
-function WordleLetter() {
+function WordleLetter({ active, value, onClick }) {
   return (
-    <Box sx={{
+    <Box
+      sx={{
       width: "4.5rem",
       height: "4.5rem",
       backgroundColor: 'primary.dark',
@@ -16,8 +17,10 @@ function WordleLetter() {
       color: "text.secondary",
       fontSize: "4.5rem",
       margin: ".2rem"
-    }}>
-      A
+      }}
+      onClick={onClick}
+    >
+      {value}
     </Box>
   );
 }

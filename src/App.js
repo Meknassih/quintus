@@ -7,8 +7,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Title />
       <Container>
-        <Title />
         <Wordle />
       </Container>
     </ThemeProvider>
