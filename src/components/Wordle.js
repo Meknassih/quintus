@@ -1,5 +1,6 @@
 import { Container } from '@mui/material';
 import { useEffect, useState } from 'react';
+import GameOverModal from './GameOverModal';
 import WordleRow from './WordleRow';
 
 function Wordle() {
@@ -8,12 +9,14 @@ function Wordle() {
   const [activeRow, setActiveRow] = useState(0);
   const [inputLetter, setInputLetter] = useState(null);
   const [isGridFull, setIsGridFull] = useState(false)
+  const [hasWon, setHasWon] = useState(false);
+  const [attempts, setAttempts] = useState(1)
   const solutionWord = "stead"
 
   function onClick(rowIndex, letterIndex) {
-    console.log(`Want to set active letter (${rowIndex},${letterIndex})`);
+    // console.log(`Want to set active letter (${rowIndex},${letterIndex})`);
     if (rowIndex !== activeRow) return;
-    console.log(`Set active letter (${rowIndex},${letterIndex})`);
+    // console.log(`Set active letter (${rowIndex},${letterIndex})`);
     setActiveLetter([rowIndex, letterIndex])
   }
 
@@ -22,7 +25,7 @@ function Wordle() {
   }
 
   function handleKeyUp(keyEvent) {
-    console.log(`pressed`, keyEvent.key, keyEvent.keyCode);
+    // console.log(`pressed`, keyEvent.key, keyEvent.keyCode);
     // If uppercase letter or lowercase letter
     if ((keyEvent.keyCode >= 65 && keyEvent.keyCode <= 90) || (keyEvent.keyCode >= 97 && keyEvent.keyCode <= 122))
       setInputLetter(keyEvent);
@@ -32,6 +35,12 @@ function Wordle() {
     for (let value of values[rowIndex]) {
       if (value === "") return false;
     }
+    return true;
+  }
+
+  function isSolutionFound() {
+    for (let i = 0; i < solutionWord.length; i++)
+      if (values[activeRow][i] !== solutionWord[i]) return false;
     return true;
   }
 
@@ -50,7 +59,7 @@ function Wordle() {
   // Order 0
   useEffect(() => {
     document.addEventListener("keyup", handleKeyUp);
-    console.log("added event listener");
+    // console.log("added event listener");
     return () => document.removeEventListener('keyup', handleKeyUp);
   }, []);
 
@@ -66,10 +75,12 @@ function Wordle() {
 
   // Order 2
   useEffect(() => {
+    if (isSolutionFound()) setActiveLetter([-1, -1]);
     // Advance in the row
-    if (!isRowFull(activeLetter[0])) setActiveLetter(oldActiveLetter => [oldActiveLetter[0], (oldActiveLetter[1] + 1) % 5]);
+    else if (!isRowFull(activeLetter[0])) setActiveLetter(oldActiveLetter => [oldActiveLetter[0], (oldActiveLetter[1] + 1) % 5]);
     // Advance to next row
     else if (activeLetter[0] < 5) {
+      setAttempts(oldAttempts => oldAttempts + 1)
       setActiveRow(activeLetter[0] + 1);
       setActiveLetter(oldActiveLetter => [oldActiveLetter[0] + 1, 0]);
     }
@@ -79,13 +90,24 @@ function Wordle() {
 
   // Order 3
   useEffect(() => {
-    if (activeLetter[0] === -1 || activeLetter[1] === -1) setIsGridFull(true);
+    if (isSolutionFound()) {
+      setActiveRow(-1);
+      setHasWon(true);
+    }
+    else if (activeLetter[0] === -1 || activeLetter[1] === -1) setIsGridFull(true);
     else setIsGridFull(false);
   }, [activeLetter])
 
   return (
     <Container maxWidth="md">
       {rows}
+      <GameOverModal
+        attempts={attempts}
+        duration={2345}
+        hasWon={hasWon}
+        open={isGridFull || activeRow === -1}
+        solution={solutionWord}
+      />
     </Container>
   );
 }
