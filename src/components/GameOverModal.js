@@ -8,7 +8,7 @@ function GameOverModal({ hasWon, open, attempts, duration, solution }) {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{hasWon ? "You win !" : "Better luck next time"}</DialogTitle>
+      <DialogTitle>{hasWon ? "You found it !" : "Better luck next time"}</DialogTitle>
       <Grid
         container
         spacing={2} 
@@ -72,7 +72,8 @@ function GameOverModal({ hasWon, open, attempts, duration, solution }) {
               paddingY: ".3rem"
             }}
           >
-            Cool, you found today’s word ! Come back tomorrow for another puzzle.
+            {hasWon ? "Cool, you found today’s word ! " : "You didn’t find today’s word, but that’s okay ! "}
+            Come back tomorrow for another puzzle.
           </Typography>
         </Grid>
         <Grid

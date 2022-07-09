@@ -19,11 +19,14 @@ function Wordle() {
         // If uppercase letter or lowercase letter
         if (
           (
-            !(action.payload.keyCode >= 65 && action.payload.keyCode <= 90) ||
+            !(action.payload.keyCode >= 65 && action.payload.keyCode <= 90) &&
             !(action.payload.keyCode >= 97 && action.payload.keyCode <= 122)
-          ) &&
-          state.isGridFull &&
-          state.hasWon
+          ) ||
+          state.isGridFull ||
+          state.hasWon ||
+          state.editableRow < 0 ||
+          state.activeCell[0] < 0 ||
+          state.activeCell[1] < 0
         ) return state;
 
         const newState = { ...state };
