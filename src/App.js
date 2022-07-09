@@ -14,7 +14,6 @@ function App() {
       </Container>
       <Footer />
     </ThemeProvider>
-    /* TODO: add credit: Words from https://github.com/tabatkins/wordle-list */
   );
 }
 

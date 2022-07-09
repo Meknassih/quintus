@@ -38,10 +38,35 @@ function Footer() {
         </Typography>
       </Link>
       <Typography
-        color="text.secondary"
+        color="text.disabled"
         fontSize={16}
       >
-        | AGPL-3.0
+        (AGPL-3.0) | Words from
+      </Typography>
+      <Link
+        href="https://github.com/tabatkins/wordle-list"
+        underline="hover"
+        target="_blank"
+        rel="noopener"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          gap: ".3rem"
+        }}>
+        <GitHubIcon fontSize="small" />
+        <Typography
+          align="center"
+          fontSize={16}
+        >
+          Tabatkins/wordle-list
+        </Typography>
+      </Link>
+      <Typography
+        color="text.disabled"
+        fontSize={16}
+      >
+        (MIT)
       </Typography>
     </Paper>);
 }
