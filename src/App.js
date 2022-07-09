@@ -2,6 +2,7 @@ import Title from './components/Title';
 import { Container, CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme';
 import Wordle from './components/Wordle';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Container>
         <Wordle />
       </Container>
+      <Footer />
     </ThemeProvider>
     /* TODO: add credit: Words from https://github.com/tabatkins/wordle-list */
   );
