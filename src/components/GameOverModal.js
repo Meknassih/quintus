@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogTitle, Grid, Paper, Typography } from "@mui/material";
+import { Dialog, DialogTitle, Grid, Typography } from "@mui/material";
 import Statistics from "./Statistics";
 import TimeToNextGame from "./TimeToNextGame";
 
@@ -11,9 +11,9 @@ function GameOverModal({ hasWon, open, attempts, duration, solution }) {
       <DialogTitle>{hasWon ? "You win !" : "Better luck next time"}</DialogTitle>
       <Grid
         container
-        spacing={2}
+        spacing={2} 
         sx={{
-          padding: "1rem"
+          padding: "1rem" 
         }}
       >
         <Grid item xs={12} sx={{

@@ -10,6 +10,8 @@ function HelpLetterExample({ value, status }) {
         return "is in the word but at an incorrect position.";
       case "position":
         return "is in the word at the correct position.";
+      default:
+        return ""
     }
   }
 
