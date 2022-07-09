@@ -8,6 +8,7 @@ function Wordle() {
   const [activeRow, setActiveRow] = useState(0);
   const [inputLetter, setInputLetter] = useState(null);
   const [isGridFull, setIsGridFull] = useState(false)
+  const solutionWord = "stead"
 
   function onClick(rowIndex, letterIndex) {
     console.log(`Want to set active letter (${rowIndex},${letterIndex})`);
@@ -39,7 +40,9 @@ function Wordle() {
     rows.push(<WordleRow
       key={i}
       values={values[i]}
+      solutionWord={solutionWord}
       selected={getSelectionForRow(i)}
+      editable={activeRow === i}
       onClick={(letterIndex) => onClick(i, letterIndex)}
     />);
   }
