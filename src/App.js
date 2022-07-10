@@ -5,6 +5,7 @@ import Wordle from './components/Wordle';
 import Footer from './components/Footer';
 
 function App() {
+  console.log(process.env.REACT_APP_SALT)
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
