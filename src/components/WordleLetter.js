@@ -31,7 +31,9 @@ function WordleLetter({ active, editable, status, value, onClick }) {
     <Box
       sx={{
         width: "4.5rem",
-        height: "4.5rem",
+        minWidth: "3rem",
+        height: "3rem",
+        minHeight: "3rem",
         backgroundColor: backgroundColor(),
         display: "flex",
         flexDirection: "column",
@@ -42,7 +44,7 @@ function WordleLetter({ active, editable, status, value, onClick }) {
         borderStyle: active ? "dashed" : "solid",
         borderRadius: "8px",
         color: "text.secondary",
-        fontSize: "4.5rem",
+        fontSize: "3rem",
         margin: ".2rem"
       }}
       onClick={onClick}
