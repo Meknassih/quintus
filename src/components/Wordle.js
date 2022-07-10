@@ -1,6 +1,8 @@
-import { Container } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useEffect, useReducer } from 'react';
+import "react-simple-keyboard/build/css/index.css";
 import GameOverModal from './GameOverModal';
+import VirtualKeyboard from './VirtualKeyboard';
 import WordleRow from './WordleRow';
 
 const solutionWord = "stead";
@@ -16,7 +18,7 @@ function Wordle() {
   function reducer(state, action) {
     switch (action.type) {
       case "setValue":
-        // If uppercase letter or lowercase letter
+        // Check if valid key and game state allows playing
         if (
           (
             !(action.payload.keyCode >= 65 && action.payload.keyCode <= 90) &&
@@ -93,6 +95,11 @@ function Wordle() {
     return true;
   }
 
+  function simulateKeyboardEvent(key) {
+    const keyboardEvent = new KeyboardEvent("keyup", { key, keyCode: key.charCodeAt(0) });
+    document.dispatchEvent(keyboardEvent);
+  }
+
   const rows = [];
   for (let i = 0; i < 6; i++) {
     rows.push(<WordleRow
@@ -115,13 +122,23 @@ function Wordle() {
       });
     };
     document.addEventListener("keyup", handleKeyUp);
-    console.log("added event listener");
     return () => document.removeEventListener('keyup', handleKeyUp);
   }, []);
 
   return (
-    <Container maxWidth="md">
-      {rows}
+    <>
+      <Grid>
+        <Grid item>
+          {rows}
+        </Grid>
+      </Grid>
+      <Grid container justifyContent="center" alignItems="start">
+        <Grid item xs={12} md={8}>
+          <VirtualKeyboard
+            onKeyPress={key => simulateKeyboardEvent(key)}
+          />
+        </Grid>
+      </Grid>
       <GameOverModal
         attempts={state.attempts}
         duration={2345}
@@ -129,7 +146,7 @@ function Wordle() {
         open={state.isGridFull || state.editableRow === -1}
         solution={solutionWord}
       />
-    </Container>
+    </>
   );
 }
 
