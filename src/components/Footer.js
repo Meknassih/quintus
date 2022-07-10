@@ -14,7 +14,7 @@ function Footer() {
         paddingY: "1rem",
         marginTop: "8px"
       }}>
-      <Grid container justifyContent={"center"}>
+      <Grid container justifyContent={"center"} columnSpacing={3}>
         <Grid item xs={12} md={6}>
           <Box sx={{
             display: "flex",
