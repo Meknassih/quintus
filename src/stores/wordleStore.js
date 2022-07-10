@@ -41,7 +41,7 @@ export function reducer(state, action) {
       const newValues = [...state.values];
 
       // Set new matrix of values
-      newValues[state.activeCell[0]][state.activeCell[1]] = action.payload.key;
+      newValues[state.activeCell[0]][state.activeCell[1]] = action.payload.key.toLowerCase();
       newState.values = newValues;
 
       // Cell movement logic

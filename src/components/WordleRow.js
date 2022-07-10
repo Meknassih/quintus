@@ -14,7 +14,7 @@ function WordleRow({ values, solutionWord, selected, editable, onClick }) {
     />);
   }
 
-  function isRowFull(rowIndex) {
+  function isRowFull() {
     for (let value of values) {
       if (value === "") return false;
     }
