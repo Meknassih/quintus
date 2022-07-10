@@ -14,7 +14,6 @@ function Title() {
         width: "100vw",
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
-        marginBottom: "2rem",
         paddingY: ".3rem"
       }}>
       <Container sx={{
