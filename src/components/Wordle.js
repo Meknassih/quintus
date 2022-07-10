@@ -4,67 +4,10 @@ import "react-simple-keyboard/build/css/index.css";
 import GameOverModal from './GameOverModal';
 import VirtualKeyboard from './VirtualKeyboard';
 import WordleRow from './WordleRow';
+import { reducer, initialState } from '../stores/wordleStore';
 
-const solutionWord = "stead";
 function Wordle() {
-  const initialState = {
-    values: Array(6).fill("").map(() => Array(5).fill("")),
-    activeCell: [0, 0],
-    editableRow: 0,
-    isGridFull: false,
-    hasWon: false,
-    attempts: 1
-  };
-  function reducer(state, action) {
-    switch (action.type) {
-      case "setValue":
-        // Check if valid key and game state allows playing
-        if (
-          (
-            !(action.payload.keyCode >= 65 && action.payload.keyCode <= 90) &&
-            !(action.payload.keyCode >= 97 && action.payload.keyCode <= 122)
-          ) ||
-          state.isGridFull ||
-          state.hasWon ||
-          state.editableRow < 0 ||
-          state.activeCell[0] < 0 ||
-          state.activeCell[1] < 0
-        ) return state;
 
-        const newState = { ...state };
-        const newValues = [...state.values];
-
-        // Set new matrix of values
-        newValues[state.activeCell[0]][state.activeCell[1]] = action.payload.key;
-        newState.values = newValues;
-
-        // Cell movement logic
-        if (isSolutionFound(state.editableRow, solutionWord, newValues)) {
-          newState.activeCell = [-1, -1];
-          newState.editableRow = -1;
-          newState.hasWon = true;
-        }
-        // Advance in the row
-        else if (!isRowFull(state.activeCell[0], newValues)) newState.activeCell = [state.activeCell[0], (state.activeCell[1] + 1) % 5];
-        // Advance to next row
-        else if (state.activeCell[0] < 5) {
-          newState.attempts++;
-          newState.editableRow++;
-          newState.activeCell = [state.activeCell[0] + 1, 0];
-        }
-        // Grid is full
-        else {
-          newState.activeCell = [-1, -1];
-          newState.isGridFull = true;
-        };
-
-        return newState;
-      case "setActiveCell":
-        return { ...state, activeCell: action.payload };
-      default:
-        throw new Error("Dispatched unknown action type: " + action.type);
-    }
-  }
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function onClick(rowIndex, letterIndex) {
@@ -82,19 +25,6 @@ function Wordle() {
     return state.activeCell[0] === rowIndex ? state.activeCell[1] : null;
   }
 
-  function isRowFull(rowIndex, valuesMatrix) {
-    for (let value of valuesMatrix[rowIndex]) {
-      if (value === "") return false;
-    }
-    return true;
-  }
-
-  function isSolutionFound(editableRow, solutionWord, valuesMatrix) {
-    for (let i = 0; i < solutionWord.length; i++)
-      if (valuesMatrix[editableRow][i] !== solutionWord[i]) return false;
-    return true;
-  }
-
   function simulateKeyboardEvent(key) {
     const keyboardEvent = new KeyboardEvent("keyup", { key, keyCode: key.charCodeAt(0) });
     document.dispatchEvent(keyboardEvent);
@@ -105,7 +35,7 @@ function Wordle() {
     rows.push(<WordleRow
       key={i}
       values={state.values[i]}
-      solutionWord={solutionWord}
+      solutionWord={state.solutionWord}
       selected={getSelectionForRow(i)}
       editable={state.editableRow === i}
       onClick={(letterIndex) => onClick(i, letterIndex)}
@@ -144,7 +74,7 @@ function Wordle() {
         duration={2345}
         hasWon={state.hasWon}
         open={state.isGridFull || state.editableRow === -1}
-        solution={solutionWord}
+        solution={state.solutionWord}
       />
     </>
   );
