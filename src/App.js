@@ -3,9 +3,26 @@ import { Box, Container, CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme';
 import Wordle from './components/Wordle';
 import Footer from './components/Footer';
+import { useQuery } from 'react-query';
 
 function App() {
-  console.log(process.env.REACT_APP_SALT)
+  const todaysWord = useQuery(['todayWord'], () => {
+    return new Promise((resolve, reject) => {
+      fetch("/.netlify/functions/getTodaysWord").then(result => resolve(result.json()));
+    });
+  });
+
+  function renderGame() {
+    switch (todaysWord.status) {
+      case "success":
+        return (<Wordle solutionWord={todaysWord.data} />);
+      case "loading":
+        return (<p>Loading...</p>);
+      case "error":
+      default:
+        return (<p>An error occurred during loading</p>);
+    }
+  }
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -18,9 +35,9 @@ function App() {
         minWidth: "100vw"
       }}>
         <Title />
-      <Container>
-        <Wordle />
-      </Container>
+        <Container>
+          {renderGame()}
+        </Container>
         <Footer />
       </Box>
     </ThemeProvider>

@@ -6,9 +6,9 @@ import VirtualKeyboard from './VirtualKeyboard';
 import WordleRow from './WordleRow';
 import { reducer, initialState } from '../stores/wordleStore';
 
-function Wordle() {
+function Wordle({ solutionWord }) {
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, (initState) => ({ ...initState, solutionWord }));
 
   function onClick(rowIndex, letterIndex) {
     // console.log(`Want to set active letter (${rowIndex},${letterIndex})`);
