@@ -5,6 +5,8 @@ import Wordle from './components/Wordle';
 import Footer from './components/Footer';
 import { useQuery } from 'react-query';
 import CryptoJS from 'crypto-js';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import LoadingSpinner from './components/LoadingSpinner';
 
 function App() {
   const todaysWord = useQuery(['todayWord'], () => {
@@ -25,7 +27,7 @@ function App() {
       case "success":
         return (<Wordle solutionWord={todaysWord.data} />);
       case "loading":
-        return (<p>Loading...</p>);
+        return (<LoadingSpinner />);
       case "error":
       default:
         return (<p>An error occurred during loading</p>);
@@ -43,7 +45,9 @@ function App() {
         minWidth: "100vw"
       }}>
         <Title />
-        <Container>
+        <Container sx={{
+          textAlign: "center"
+        }}>
           {renderGame()}
         </Container>
         <Footer />
