@@ -9,6 +9,7 @@ exports.handler = async function (event, context) {
   };
 
   const { MongoClient } = require("mongodb");
+  const CryptoJS = require('crypto-js');
   // Create a new MongoClient
   const client = new MongoClient(process.env.MONGO_URL);
   const db = client.db(process.env.MONGO_DB);
@@ -21,8 +22,11 @@ exports.handler = async function (event, context) {
     const todayWordCursor = await db.collection("words").find().skip(todayIndex).limit(1);
     const result = await todayWordCursor.toArray();
     if (result.length < 1) throw new Error("0 documents found");
-    todayWord = result[0].value;
+    const key = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_KEY);
+    const iv = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_IV);
+    todayWord = CryptoJS.AES.encrypt(result[0].value, key, { iv }).toString();
   } catch (error) {
+    console.error(error)
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Could not get today’s word", error })
@@ -31,7 +35,6 @@ exports.handler = async function (event, context) {
     // Ensures that the client will close when you finish/error
     await client.close();
   }
-
   return {
     statusCode: 200,
     body: JSON.stringify(todayWord),

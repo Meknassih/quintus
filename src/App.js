@@ -4,11 +4,19 @@ import theme from './theme';
 import Wordle from './components/Wordle';
 import Footer from './components/Footer';
 import { useQuery } from 'react-query';
+import CryptoJS from 'crypto-js';
 
 function App() {
   const todaysWord = useQuery(['todayWord'], () => {
     return new Promise((resolve, reject) => {
-      fetch("/.netlify/functions/getTodaysWord").then(result => resolve(result.json()));
+      fetch("/.netlify/functions/getTodaysWord")
+        .then(result => result.json())
+        .then(result => {
+          const key = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_KEY);
+          const iv = CryptoJS.enc.Utf8.parse(process.env.REACT_APP_IV);
+          const word = CryptoJS.AES.decrypt(result, key, { iv }).toString(CryptoJS.enc.Utf8);
+          resolve(word);
+        });
     });
   });
 
