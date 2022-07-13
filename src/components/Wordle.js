@@ -75,6 +75,7 @@ function Wordle({ solutionWord }) {
         hasWon={state.hasWon}
         open={state.isGridFull || state.editableRow === -1}
         solution={state.solutionWord}
+        enableStorage={true}
       />
     </>
   );

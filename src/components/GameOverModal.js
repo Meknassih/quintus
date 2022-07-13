@@ -1,10 +1,39 @@
 import { Dialog, DialogTitle, Grid, Typography } from "@mui/material";
+import { useEffect, useReducer } from "react";
+import { initialState, reducer } from "../stores/statsStore";
+import useEffectAllDeps from "../utilities/useEffectAllDeps";
 import Statistics from "./Statistics";
 import TimeToNextGame from "./TimeToNextGame";
 
-function GameOverModal({ hasWon, open, attempts, duration, solution }) {
+function GameOverModal({ hasWon, open, attempts, duration, solution, enableStorage }) {
   function handleClose() {
   }
+
+  const [state, dispatch] = useReducer(reducer, initialState, init => {
+    if (!enableStorage) return init;
+    const rawUserStats = localStorage.getItem("userStats");
+    if (!rawUserStats) return init;
+    return JSON.parse(rawUserStats);
+  });
+
+  useEffect(() => {
+    if (!enableStorage) return;
+    console.log("persisting state");
+    localStorage.setItem("userStats", JSON.stringify(state));
+  }, [enableStorage, state]);
+
+  useEffectAllDeps(() => {
+    console.log("(hasWon, attempts, duration) have all changed");
+    // @ts-ignore
+    dispatch({
+      type: "addGameResult",
+      payload: {
+        attempts,
+        time: duration,
+        hasWon
+      }
+    });
+  }, [hasWon, attempts, duration])
 
   return (
     <Dialog onClose={handleClose} open={open}>
