@@ -7,7 +7,6 @@ import WordleRow from './WordleRow';
 import { reducer, initialState } from '../stores/wordleStore';
 
 function Wordle({ solutionWord }) {
-
   const [state, dispatch] = useReducer(reducer, initialState, (initState) => ({ ...initState, solutionWord }));
 
   function onClick(rowIndex, letterIndex) {
@@ -50,7 +49,7 @@ function Wordle({ solutionWord }) {
         type: "setValue",
         payload: keyEvent
       });
-    };
+    }
     document.addEventListener("keyup", handleKeyUp);
     return () => document.removeEventListener('keyup', handleKeyUp);
   }, []);
@@ -66,6 +65,7 @@ function Wordle({ solutionWord }) {
         <Grid item xs={12} md={8}>
           <VirtualKeyboard
             onKeyPress={key => simulateKeyboardEvent(key)}
+            badKeys={state.badKeys}
           />
         </Grid>
       </Grid>

@@ -18,7 +18,8 @@ export const initialState = {
   isGridFull: false,
   hasWon: false,
   attempts: 1,
-  solutionWord: "stead"
+  solutionWord: "stead",
+  badKeys: ["1"]
 };
 
 export function reducer(state, action) {
@@ -54,6 +55,13 @@ export function reducer(state, action) {
       else if (!isRowFull(state.activeCell[0], newValues)) newState.activeCell = [state.activeCell[0], (state.activeCell[1] + 1) % 5];
       // Advance to next row
       else if (state.activeCell[0] < 5) {
+        // Add relevant keys to the bad keys
+        let lettersToAdd = []
+        for (let letter of newState.values[state.editableRow])
+          if (!state.badKeys.includes(letter) && !state.solutionWord.includes(letter))
+            lettersToAdd.push(letter)
+        newState.badKeys = [...state.badKeys, ...lettersToAdd]
+        // Next row
         newState.attempts++;
         newState.editableRow++;
         newState.activeCell = [state.activeCell[0] + 1, 0];
@@ -62,7 +70,7 @@ export function reducer(state, action) {
       else {
         newState.activeCell = [-1, -1];
         newState.isGridFull = true;
-      };
+      }
 
       return newState;
     case "setActiveCell":
